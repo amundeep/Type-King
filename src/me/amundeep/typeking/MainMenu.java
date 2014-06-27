@@ -35,6 +35,23 @@ public class MainMenu extends Activity{
 			
 		});
 		
+		ivInstructions.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		ivAbout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 //		AlertDialog alertDialog = new AlertDialog.Builder(this).create(); //Read Update
 //        alertDialog.setTitle("Exit Game");
