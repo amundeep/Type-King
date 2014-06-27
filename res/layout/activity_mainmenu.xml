@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlMainMenu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="#95A5A6" >
+
+    <ImageView
+        android:id="@+id/ivTitle"
+        android:src="@drawable/title"
+        android:adjustViewBounds="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       	android:maxHeight="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="10dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@id/ivTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" >
+
+        <ImageView
+            android:id="@+id/ivStart"
+            android:src="@drawable/start"
+            android:adjustViewBounds="true"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp" />
+
+        <ImageView
+            android:id="@+id/ivInstructions"
+            android:src="@drawable/instructions"
+            android:adjustViewBounds="true"
+            android:layout_toLeftOf="@id/ivStart"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp" />
+
+        <ImageView
+            android:id="@+id/ivAbout"
+            android:src="@drawable/about"
+            android:adjustViewBounds="true"
+            android:layout_toRightOf="@id/ivStart"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp" />
+    </RelativeLayout>
+
+</RelativeLayout>
