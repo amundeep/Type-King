@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,12 +40,13 @@ public class MainMenu extends Activity{
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.i("Button", "working!");
+				Intent openLevelPacks = new Intent("me.amundeep.typeking.LEVELPACKS");
+				startActivity(openLevelPacks);
 			}
 			
 		});
 		
 		ivInstructions.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -81,7 +83,6 @@ public class MainMenu extends Activity{
 		});
 		
 		ivOptions.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -114,10 +115,9 @@ public class MainMenu extends Activity{
 
 	}
 	
+	
 	@Override
-	public void onBackPressed() {
-		
-	}
+	public void onBackPressed() { }
 
 	
 	
