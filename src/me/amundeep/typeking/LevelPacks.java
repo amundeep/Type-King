@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -121,6 +122,10 @@ public class LevelPacks extends Activity{
                 Toast.makeText(getApplicationContext(),
                    "Position: "+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
                    .show();
+                
+                Intent openGame = new Intent("me.amundeep.typeking.GAMESCREEN");
+                startActivity(openGame);
+                
 			}
 		
 		});

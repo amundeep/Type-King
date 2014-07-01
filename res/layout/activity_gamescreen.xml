@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#95A5A6" >
+
+
+        <EditText
+            android:id="@+id/etStatusBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+			android:layout_gravity="center"
+            android:background="@null"
+            android:textColor="#9A12B3"
+            android:textIsSelectable="false"
+            android:editable="false"
+            android:focusable="false"
+            android:padding="15dp"
+            android:gravity="center"
+            android:ems="10"
+            android:text="Click 'Begin' to start..." />    
+    
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+        <Button
+            android:id="@+id/bStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="5dp"
+            android:minWidth="100dp"
+            android:text="BEGIN" />
+
+
+        <EditText
+            android:id="@+id/etTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/bStop"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:textIsSelectable="false"
+            android:focusable="false"
+            android:editable="false"
+            android:padding="15dp"
+            android:textSize="22sp"
+            android:gravity="right"
+            android:ems="10"
+            android:text="Time: 30" />
+
+    </RelativeLayout>
+    
+    
+    <EditText
+        android:id="@+id/etDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:textIsSelectable="false"
+        android:editable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:layout_margin="15dp"
+        android:ems="10" />
+
+
+    <EditText
+        android:id="@+id/etInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:singleLine="true"
+        android:layout_margin="15dp"
+        android:inputType="text"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/bSaveHS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:text="Save Highscore" />
+    
+</LinearLayout>

@@ -48,6 +48,20 @@
             </intent-filter>
             
         </activity>
+        <activity
+            android:name="me.amundeep.typeking.GameScreen"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" >
+            <intent-filter>
+                <action android:name="me.amundeep.typeking.GAMESCREEN" />
+                
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+        </activity>
+        
     </application>
 
 </manifest>
