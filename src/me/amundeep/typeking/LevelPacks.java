@@ -134,5 +134,11 @@ public class LevelPacks extends Activity{
 	}
 
 	
+	@Override
+	public void onBackPressed() {
+		Intent mainMenu = new Intent("me.amundeep.typeking.MAINMENU");
+		startActivity(mainMenu);
+	}
+	
 	
 }

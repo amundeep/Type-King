@@ -52,7 +52,7 @@
             android:textSize="22sp"
             android:gravity="right"
             android:ems="10"
-            android:text="Time: 30" />
+            android:text="" />
 
     </RelativeLayout>
     
@@ -76,7 +76,6 @@
         android:layout_height="wrap_content"
         android:textSize="40sp"
         android:layout_margin="15dp"
-        android:imeActionId="100"
         android:inputType="text"
         android:ems="10" />
 
