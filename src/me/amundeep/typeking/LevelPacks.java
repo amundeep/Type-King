@@ -120,7 +120,7 @@ public class LevelPacks extends Activity{
                    
                 // Show Alert 
                 Toast.makeText(getApplicationContext(),
-                   "Position: "+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
+                   "Position: "+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_SHORT)
                    .show();
                 
                 Intent openGame = new Intent("me.amundeep.typeking.GAMESCREEN");
