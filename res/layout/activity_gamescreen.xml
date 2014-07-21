@@ -80,12 +80,5 @@
         android:inputType="text"
         android:ems="10" />
 
-    <Button
-        android:id="@+id/bSaveHS"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:text="Save Highscore" />
     
 </LinearLayout>
