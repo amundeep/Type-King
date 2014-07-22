@@ -62,8 +62,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@id/rlOne"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" >
+        android:layout_centerHorizontal="true" >
         
         <ImageView
             android:id="@+id/ivAbout"
@@ -93,4 +92,6 @@
         
     </LinearLayout>
 
+
+    
 </RelativeLayout>
