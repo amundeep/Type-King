@@ -119,9 +119,9 @@ public class LevelPacks extends Activity{
                 String  itemValue = (String) lvLevelPacks.getItemAtPosition(position);
                    
                 // Show Alert 
-                Toast.makeText(getApplicationContext(),
-                   "Position: "+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_SHORT)
-                   .show();
+//                Toast.makeText(getApplicationContext(),
+//                   "Position: "+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_SHORT)
+//                   .show();
                 
                 Intent openGame = new Intent("me.amundeep.typeking.GAMESCREEN");
                 startActivity(openGame);
