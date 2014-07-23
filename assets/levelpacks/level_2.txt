@@ -1,0 +1,7 @@
+essay
+target
+principal
+reindeer
+pottery
+leaf
+artist

@@ -71,12 +71,12 @@ public class LevelPacks extends Activity{
 		try {
 			String l = numLinesReader.readLine();
 			while(l != null){
-				Log.i("hello", "oh god " + numLines);
+				Log.i("LevelPacks", "Level " + numLines);
 				numLines++;
 				l = numLinesReader.readLine();
 			}
 			NUM_LEVELS = numLines;
-			Log.i("hi", "" + NUM_LEVELS);
+			Log.i("LevelPacks", "Total: " + NUM_LEVELS);
 		} catch (IOException ex) {
 			String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
 			Log.e("sdcard-err2:",err); 
@@ -111,12 +111,11 @@ public class LevelPacks extends Activity{
 		
 		lvLevelPacks.setAdapter(adapter);
 		
-		lvLevelPacks.setOnItemClickListener(new OnItemClickListener(){
+		lvLevelPacks.setOnItemClickListener(new OnItemClickListener(){     //WHEN A LEVEL IS CHOSEN
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				// TODO Auto-generated method stub
+					long id) {  
 				// ListView Clicked item index
                 int itemPosition = position;
                 
@@ -129,6 +128,7 @@ public class LevelPacks extends Activity{
 //                   .show();
                 
                 Intent openGame = new Intent("me.amundeep.typeking.GAMESCREEN");
+                openGame.putExtra("level", "level_" + (itemPosition + 1));
                 startActivity(openGame);
                 
 			}

@@ -1,4 +1,11 @@
 package me.amundeep.typeking;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -23,13 +30,16 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	
 	InputMethodManager imm;
 	
-	String[] testWords = {"amazing", "horrible", "swagger", "unbelievable", "working"};
 	int wordCount = 0;
 	int numWords = 0;
 	int points = 0;
 	
 	//Mechanics
 	boolean levelComplete = false;
+	
+	//Level Selected
+	String levelSelect;
+	ArrayList<String> levelWords;
 	
 	//Timer elements
 	int time = 30; //Change this if necessary
@@ -52,6 +62,56 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gamescreen);
+		
+		Intent i = getIntent();
+		levelSelect = i.getExtras().getString("level");
+//		Log.i("Level", levelSelect);
+		
+		levelWords = new ArrayList<String>();
+		
+		InputStream inNumLines = null;
+		InputStream inWords = null;
+		
+		try {
+			inNumLines = this.getAssets().open("levelpacks/" + levelSelect + ".txt");
+			inWords = this.getAssets().open("levelpacks/" + levelSelect + ".txt");
+		} catch (IOException ex) {
+			String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
+			Log.e("sdcard-err2:",err);  
+		}
+		
+		BufferedReader numLinesReader = new BufferedReader(new InputStreamReader(inWords));
+		
+		int counter = 0;
+		
+		try {
+			String l = numLinesReader.readLine();
+			while(l != null){
+				String temp;
+				
+				if(counter == 0)
+					temp = l;
+				else
+					temp = numLinesReader.readLine();
+				
+				Log.i("GameScreen", "Word Index: " + numWords + "  |  Word: " + temp);
+				l = temp;
+				if(l != null){
+					numWords++;
+					levelWords.add(temp);
+				}
+				counter++;
+			}
+			Log.i("GameScreen", "Total: " + numWords);
+		} catch (IOException ex) {
+			String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
+			Log.e("sdcard-err2:",err); 
+		}
+		
+		
+		for(String s : levelWords){
+			Log.i("GameScreen", "Word Array: " + s);
+		}
 		
 		etStatusBar = (EditText) findViewById(R.id.etStatusBar);
 		bStop = (Button) findViewById(R.id.bStop);
@@ -86,6 +146,8 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		etInput = (EditText) findViewById(R.id.etInput);
 		etInput.setImeActionLabel("Submit", KeyEvent.KEYCODE_ENTER);
 		etInput.setOnEditorActionListener(this);
+		etInput.setFocusable(false);
+		etInput.setFocusableInTouchMode(false);
 		imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 	
@@ -131,7 +193,6 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 				toggleStop = 1; //IN LEVEL STATE
 				bStop.setText(toggleText[toggleStop]);
 				displayMessage("Type the words that appear.", 0);
-				etInput.requestFocus();
 				launchLevel(); //Start Level
 				startTimer();; //Start timer
 			}else if(toggleStop == 1){                    //IF GAME IS IN PROGRESS
@@ -228,16 +289,22 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	
 	//Every time "Submit" is pressed.
 	public void checkWord(){
-		if(etInput.getText().equals("") || etInput.getText() == null){
+		
+		String input = etInput.getText().toString().trim().toLowerCase(Locale.getDefault()); //USER INPUT
+		String display = etDisplay.getText().toString().toLowerCase(Locale.getDefault());  //ACTUAL WORD
+		
+//		Log.i("GameScreen", "Empty ET?: " + etInput.getText());
+		
+		if(etInput.getText().toString().equals("") || etInput.getText().toString() == null){
 			displayMessage("Please enter some text to input.", 2);
 			return;
 		}
 		
-		if(etInput.getText().toString().trim().equals(etDisplay.getText().toString())){ //If correct
+		if(input.equals(display)){ //If correct
 			displayMessage("Correct! +50 points", 1);
 			wordCount++;
 			if(wordCount < numWords){ //If still words left
-				etDisplay.setText(testWords[wordCount]);
+				etDisplay.setText(levelWords.get(wordCount));
 			}else{ //Level completed
 				levelComplete();
 			}
@@ -252,16 +319,13 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	public void launchLevel(){
 		etInput.setFocusable(true);
 		etInput.setFocusableInTouchMode(true);
-		imm.showSoftInput(etInput, InputMethodManager.SHOW_IMPLICIT);
 		etInput.requestFocus();
+		imm.showSoftInput(etInput, InputMethodManager.SHOW_IMPLICIT);
 		
 		wordCount = 0;
 		
-		//Get words from file to array
-		numWords = testWords.length;
-		
 		//Make counter and start with first word on etDisplay
-		etDisplay.setText(testWords[wordCount]); //Show first word from list.
+		etDisplay.setText(levelWords.get(wordCount)); //Show first word from list.
 		
 	}
 	
