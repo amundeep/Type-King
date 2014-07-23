@@ -6,18 +6,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class LevelPacks extends Activity{
 
+	Context context;
 	ListView lvLevelPacks;
 	int numLines = 0;
 	
@@ -26,6 +29,8 @@ public class LevelPacks extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_levelpacks);
+		
+		context = this;
 		
 		lvLevelPacks = (ListView) findViewById(R.id.lvLevelPacks);
 //		String[] levels = new String[] { "Android List View", 
@@ -61,14 +66,14 @@ public class LevelPacks extends Activity{
 			Log.e("sdcard-err2:",err);  
 		}
 		
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		BufferedReader numLinesReader = new BufferedReader(new InputStreamReader(in));
 		
 		try {
-			String l = reader.readLine();
+			String l = numLinesReader.readLine();
 			while(l != null){
 				Log.i("hello", "oh god " + numLines);
 				numLines++;
-				l = reader.readLine();
+				l = numLinesReader.readLine();
 			}
 			NUM_LEVELS = numLines;
 			Log.i("hi", "" + NUM_LEVELS);
@@ -84,7 +89,7 @@ public class LevelPacks extends Activity{
 		}
 		
 		//Second buffered reader to read level names.
-		BufferedReader reader2 = new BufferedReader(new InputStreamReader(in2));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in2));
 		
 		String line = "";
 		int counter = 0;
@@ -92,7 +97,7 @@ public class LevelPacks extends Activity{
 		//Loop to read Level names from levels.txt
 		while(counter < levels.length){
 			try {
-				line = reader2.readLine();
+				line = reader.readLine();
 				levels[counter] = line.trim();
 			} catch (IOException ex) {
 				String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
@@ -101,7 +106,7 @@ public class LevelPacks extends Activity{
 			counter++;
 		}
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		ArrayAdapter<String> adapter = new MyAdapter<String>(this,
 	              android.R.layout.simple_list_item_1,  levels);
 		
 		lvLevelPacks.setAdapter(adapter);
@@ -130,6 +135,29 @@ public class LevelPacks extends Activity{
 		
 		});
 		
+		
+	}
+	
+	class MyAdapter<String> extends ArrayAdapter<String>{
+		
+		public MyAdapter(Context context, int resource, String[] values){
+			super(context, resource, values);
+		}
+		
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {  
+			View view = super.getView(position, convertView, parent);  
+			if (position < (numLines/3)) {
+				view.setBackgroundColor(Color.parseColor("#F5AB35"));  
+			} else if(position < ((2*numLines)/3)) {
+				view.setBackgroundColor(Color.parseColor("#E67E22"));  
+			} else{
+				view.setBackgroundColor(Color.parseColor("#C0392B"));
+			}
+
+			return view;  
+		}
 		
 	}
 

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,6 +20,8 @@ import android.widget.TextView.OnEditorActionListener;
 public class GameScreen extends Activity implements OnClickListener, OnEditorActionListener{
 
 	Context context = this;
+	
+	InputMethodManager imm;
 	
 	String[] testWords = {"amazing", "horrible", "swagger", "unbelievable", "working"};
 	int wordCount = 0;
@@ -83,7 +86,7 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		etInput = (EditText) findViewById(R.id.etInput);
 		etInput.setImeActionLabel("Submit", KeyEvent.KEYCODE_ENTER);
 		etInput.setOnEditorActionListener(this);
-		
+		imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 	
 	
@@ -127,6 +130,7 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 			if(toggleStop == 0){  //IF GAME HAS NOT STARTED
 				toggleStop = 1; //IN LEVEL STATE
 				bStop.setText(toggleText[toggleStop]);
+				displayMessage("Type the words that appear.", 0);
 				etInput.requestFocus();
 				launchLevel(); //Start Level
 				startTimer();; //Start timer
@@ -224,6 +228,11 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	
 	//Every time "Submit" is pressed.
 	public void checkWord(){
+		if(etInput.getText().equals("") || etInput.getText() == null){
+			displayMessage("Please enter some text to input.", 2);
+			return;
+		}
+		
 		if(etInput.getText().toString().trim().equals(etDisplay.getText().toString())){ //If correct
 			displayMessage("Correct! +50 points", 1);
 			wordCount++;
@@ -241,6 +250,13 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	}
 	
 	public void launchLevel(){
+		etInput.setFocusable(true);
+		etInput.setFocusableInTouchMode(true);
+		imm.showSoftInput(etInput, InputMethodManager.SHOW_IMPLICIT);
+		etInput.requestFocus();
+		
+		wordCount = 0;
+		
 		//Get words from file to array
 		numWords = testWords.length;
 		
@@ -274,6 +290,12 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	public void gameOver(){
 		pauseTimer();
 		etTime.setText("Time: 0");
+		displayMessage("Game Over!  Restart, quit to Main Menu, or go back to choose a new level.", 2);
+		
+		etInput.setFocusable(false);
+		etInput.setFocusableInTouchMode(false);
+		imm.hideSoftInputFromWindow(etInput.getWindowToken(), 0);
+		
 		time = 30;
 		toggleStop = 2;
 		bStop.setText(toggleText[toggleStop]);
@@ -284,9 +306,16 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		pauseTimer();
 		etDisplay.setText("");
 		displayMessage("Congratulations, your score was: " + points, 0);
+		
+		etInput.setFocusable(false);
+		etInput.setFocusableInTouchMode(false);
+		imm.hideSoftInputFromWindow(etInput.getWindowToken(), 0);
+		
 		levelComplete = true;
 		toggleStop = 3;
 		bStop.setText(toggleText[toggleStop]);
+		wordCount = 0;
+		
 	}
 	
 	//Used when chosen level is NOT completed yet
@@ -308,6 +337,8 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
         
         alertDialog.show();
 	}
+	
+	
 	
 	@Override
 	public void onBackPressed() {
