@@ -1,8 +1,12 @@
 package me.amundeep.typeking;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -13,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -33,12 +38,20 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	int wordCount = 0;
 	int numWords = 0;
 	int points = 0;
+	final int POINTS_CORRECT = 100;
+	final int POINTS_INCORRECT = 50;
+	
+	//Save Progress
+	ArrayList<String> progressFile;
+	String progressContent;
 	
 	//Mechanics
 	boolean levelComplete = false;
 	
 	//Level Selected
 	String levelSelect;
+	int numLevel;
+	String difficulty;
 	ArrayList<String> levelWords;
 	
 	//Timer elements
@@ -65,16 +78,28 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		
 		Intent i = getIntent();
 		levelSelect = i.getExtras().getString("level");
+		numLevel = i.getExtras().getInt("levelNum");
 //		Log.i("Level", levelSelect);
+		
+		if(numLevel <= 10){
+			difficulty = "easy";
+		} else if(numLevel <= 20){
+			difficulty = "medium";
+		} else if(numLevel <= 30){
+			difficulty = "hard";
+		} else {
+			difficulty = "random";
+		}
 		
 		levelWords = new ArrayList<String>();
 		
-		InputStream inNumLines = null;
+		progressFile = new ArrayList<String>(); //file contents "progress.txt"
+		progressContent = "";
+		
 		InputStream inWords = null;
 		
 		try {
-			inNumLines = this.getAssets().open("levelpacks/" + levelSelect + ".txt");
-			inWords = this.getAssets().open("levelpacks/" + levelSelect + ".txt");
+			inWords = this.getAssets().open("levelpacks/" + difficulty + "/" + levelSelect + ".txt");
 		} catch (IOException ex) {
 			String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
 			Log.e("sdcard-err2:",err);  
@@ -192,7 +217,6 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 			if(toggleStop == 0){  //IF GAME HAS NOT STARTED
 				toggleStop = 1; //IN LEVEL STATE
 				bStop.setText(toggleText[toggleStop]);
-				displayMessage("Type the words that appear.", 0);
 				launchLevel(); //Start Level
 				startTimer();; //Start timer
 			}else if(toggleStop == 1){                    //IF GAME IS IN PROGRESS
@@ -301,28 +325,95 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		}
 		
 		if(input.equals(display)){ //If correct
-			displayMessage("Correct! +50 points", 1);
+			int inc = calcPoints(input, display, true);
+			points += inc;
 			wordCount++;
+			displayMessage("Correct! +" + inc + " points (" + wordCount + "/" + numWords + " words)", 1);
 			if(wordCount < numWords){ //If still words left
 				etDisplay.setText(levelWords.get(wordCount));
 			}else{ //Level completed
 				levelComplete();
 			}
 		}else{
-			displayMessage("Incorrect. -50 points", 2);
+			int inc = calcPoints(input, display, false);
+			points -= inc;
+			displayMessage("Incorrect. -" + inc + " points", 2);
 		}
 		
 		etInput.setText(""); //Clear input ET
 		
 	}
 	
+	//Deduction Calculator for incorrect words
+	/*
+	 * INCORRECT: 
+	 * Automatic 40 point deduction, and deduct 2 points per char that doesn't 
+	 * match up with actual word, and 2 points for extra char also.
+	 * 
+	 * CORRECT:
+	 * Automatic 100 points, added 2 points for every character after four characters
+	 */
+	public int calcPoints(String input, String display, boolean correct){
+		if(!correct){ //DEDUCTING POINTS FROM SCORE
+			char[] inputArr = input.toCharArray();
+			char[] dispArr = display.toCharArray();
+			boolean dispIsMax = false;
+			int totalDeduct = POINTS_INCORRECT;
+			
+			int maxLength = Math.max(inputArr.length, dispArr.length);
+			
+			if(maxLength == dispArr.length){
+				dispIsMax = true;
+			}
+			
+			for(int i = 0; i < maxLength; i++){
+				if(dispIsMax){
+					if(i < inputArr.length){
+						if(inputArr[i] != dispArr[i]){
+							totalDeduct += 2;
+						}
+					} else {
+						totalDeduct += 2;
+					}
+				} else {
+					if(i < dispArr.length){
+						if(dispArr[i] != inputArr[i]){
+							totalDeduct += 2;
+						}
+					} else {
+						totalDeduct += 2;
+					}
+				}
+			}
+			return totalDeduct;
+		}else{ //ADDING POINTS TO SCORE
+			int total = POINTS_CORRECT;
+			
+			
+			if(difficulty.equals("medium")){
+				total = (int) (total * 1.5);
+			}else if(difficulty.equals("hard")){
+				total *= 2;
+			}
+			
+			int wordLength = levelWords.get(wordCount).length();
+			
+			if(wordLength > 4)
+				total += 2*(wordLength - 4);
+			
+			return total;
+		}
+	}
+	
 	public void launchLevel(){
+		displayMessage("Type the words that appear.", 0);
 		etInput.setFocusable(true);
 		etInput.setFocusableInTouchMode(true);
 		etInput.requestFocus();
 		imm.showSoftInput(etInput, InputMethodManager.SHOW_IMPLICIT);
 		
 		wordCount = 0;
+		points = 0;
 		
 		//Make counter and start with first word on etDisplay
 		etDisplay.setText(levelWords.get(wordCount)); //Show first word from list.
@@ -333,7 +424,7 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		/*
 		 * ID Reference:
 		 * 0 - Default - #9A12B3
-		 * 1 - Correct - #26A65B
+		 * 1 - Correct - #1E824C
 		 * 2 - Incorrect - #FF0000
 		 */
 		etStatusBar.setText(s);
@@ -342,7 +433,7 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 			etStatusBar.setTextColor(Color.parseColor("#9A12B3"));
 			break;
 		case 1: //Correct
-			etStatusBar.setTextColor(Color.parseColor("#26A65B"));
+			etStatusBar.setTextColor(Color.parseColor("#1E824C"));
 			break;
 		case 2: //Incorrect
 			etStatusBar.setTextColor(Color.parseColor("#FF0000"));
@@ -354,11 +445,14 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	public void gameOver(){
 		pauseTimer();
 		etTime.setText("Time: 0");
-		displayMessage("Game Over!  Restart, quit to Main Menu, or go back to choose a new level.", 2);
 		
 		etInput.setFocusable(false);
 		etInput.setFocusableInTouchMode(false);
 		imm.hideSoftInputFromWindow(etInput.getWindowToken(), 0);
+		
+		etInput.setText("");
+		etDisplay.setText("");
+		displayMessage("Game Over!  Restart, quit to Main Menu, or go back to choose a new level.  You had " + points + " points.", 2);
 		
 		time = 30;
 		toggleStop = 2;
@@ -369,7 +463,10 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	public void levelComplete(){
 		pauseTimer();
 		etDisplay.setText("");
+		points += (time*10);
 		displayMessage("Congratulations, your score was: " + points, 0);
+		
+		editFile("progress.txt");
 		
 		etInput.setFocusable(false);
 		etInput.setFocusableInTouchMode(false);
@@ -400,6 +497,75 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	    });
         
         alertDialog.show();
+	}
+	
+	
+	
+	public void editFile(String fileName){
+		int index = numLevel - 1;
+		
+		File sdcard = Environment.getExternalStorageDirectory();
+
+		//Get the text file
+		File file = new File(sdcard.getAbsolutePath() + "/type-king/" + fileName);
+
+		//Read text from file
+
+		try {
+		    BufferedReader br = new BufferedReader(new FileReader(file));
+		    String line;
+		    
+
+		    int counter = 0;
+		    while ((line = br.readLine()) != null) {
+		        if(counter == index){
+		        	String[] parts = line.split(" ");
+		        	parts[1] = "c";
+		        	if(Integer.parseInt(parts[2]) < points)
+		        		parts[2] = Integer.toString(points);
+		        	progressFile.add(numLevel + " " + parts[1] + " " + parts[2]);
+		        }else{
+		        	progressFile.add(line);
+		        }
+		        
+		        counter++;
+		    }
+		    br.close();
+		    
+		    final File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/type-king/" );
+		    final File myFile = new File(dir, fileName);
+		    
+//		    boolean deleted = myFile.delete();
+		    
+		    FileOutputStream fos = new FileOutputStream(myFile);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fos);
+            
+            for(int i = 0; i < progressFile.size(); i++){
+            	if(i == progressFile.size() - 1){
+            		progressContent += progressFile.get(i);
+            	}else
+            		progressContent += progressFile.get(i) + "\n";
+            }
+            
+            myOutWriter.write(progressContent);
+
+            myOutWriter.close();
+            fos.close();
+            
+//            if(deleted){
+//            	
+//            }else{
+//            	Log.e("DELETE ERROR", "File not deleted");
+//            }
+		    
+		    
+		}
+		catch (IOException ex) {
+			String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
+			Log.e("sdcard-err2:",err); 
+		}
+		
+		
 	}
 	
 	

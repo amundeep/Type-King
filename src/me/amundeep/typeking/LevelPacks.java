@@ -1,15 +1,21 @@
 package me.amundeep.typeking;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +23,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class LevelPacks extends Activity{
 
 	Context context;
 	ListView lvLevelPacks;
-	int numLines = 0;
+	int numLinesTemp = 0;
+	public int numLevelsForFile = 0;
+	String[] levels;
+	ArrayList<String> completeArray;
+	ArrayList<Integer> hsArray;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,25 +44,9 @@ public class LevelPacks extends Activity{
 		context = this;
 		
 		lvLevelPacks = (ListView) findViewById(R.id.lvLevelPacks);
-//		String[] levels = new String[] { "Android List View", 
-//                "Adapter implementation",
-//                "Simple List View In Android",
-//                "Create List View Android", 
-//                "Android Example", 
-//                "List View Source Code", 
-//                "List View Array Adapter", 
-//                "Android Example List View",
-//                "List View Array Adapter", 
-//                "List View Array Adapter", 
-//                "List View Array Adapter", 
-//                "List View Array Adapter", 
-//                "List View Array Adapter", 
-//                "List View Array Adapter", 
-//                "List View Array Adapter", 
-//                "List View Array Adapter", 
-//                "List View Array Adapter", 
-//                "List View Array Adapter", 
-//               };
+
+		completeArray = new ArrayList<String>();
+		hsArray = new ArrayList<Integer>();
 		
 		InputStream in = null;
 		InputStream in2 = null;
@@ -71,11 +66,12 @@ public class LevelPacks extends Activity{
 		try {
 			String l = numLinesReader.readLine();
 			while(l != null){
-				Log.i("LevelPacks", "Level " + numLines);
-				numLines++;
+				numLinesTemp++;
+				Log.i("LevelPacks", "Level " + numLinesTemp);
+				
 				l = numLinesReader.readLine();
 			}
-			NUM_LEVELS = numLines;
+			NUM_LEVELS = numLinesTemp;
 			Log.i("LevelPacks", "Total: " + NUM_LEVELS);
 		} catch (IOException ex) {
 			String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
@@ -83,7 +79,7 @@ public class LevelPacks extends Activity{
 		}
 		
 		//Create an array of blank strings (not null) that is number of levels from levels.txt
-		String[] levels = new String[NUM_LEVELS];
+		levels = new String[NUM_LEVELS];
 		for(int i = 0; i < NUM_LEVELS; i++){
 			levels[i] = "";
 		}
@@ -98,6 +94,8 @@ public class LevelPacks extends Activity{
 		while(counter < levels.length){
 			try {
 				line = reader.readLine();
+				if(line.startsWith("Level"))
+					numLevelsForFile++;
 				levels[counter] = line.trim();
 			} catch (IOException ex) {
 				String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
@@ -106,8 +104,14 @@ public class LevelPacks extends Activity{
 			counter++;
 		}
 		
+		
+		//WRITE TO FILE FOR FIRST TIME (check happens in method)
+		createFile("progress.txt");
+		
+		readFile("progress.txt");
+		
 		ArrayAdapter<String> adapter = new MyAdapter<String>(this,
-	              android.R.layout.simple_list_item_1,  levels);
+	              android.R.layout.simple_list_item_2, android.R.id.text1, levels);
 		
 		lvLevelPacks.setAdapter(adapter);
 		
@@ -129,6 +133,7 @@ public class LevelPacks extends Activity{
                 
                 Intent openGame = new Intent("me.amundeep.typeking.GAMESCREEN");
                 openGame.putExtra("level", "level_" + (itemPosition + 1));
+                openGame.putExtra("levelNum", (itemPosition + 1));
                 startActivity(openGame);
                 
 			}
@@ -138,24 +143,117 @@ public class LevelPacks extends Activity{
 		
 	}
 	
+	public void createFile(String fileName){
+        FileOutputStream fos = null;
+        OutputStreamWriter myOutWriter = null;
+        try {
+            final File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/type-king/" );
+
+            if (!dir.exists()) {
+                dir.mkdirs(); 
+            }
+
+            final File myFile = new File(dir, fileName);
+
+            if (!myFile.exists()) {    
+                myFile.createNewFile();
+                fos = new FileOutputStream(myFile);
+                myOutWriter = new OutputStreamWriter(fos);
+                
+                myOutWriter.append(getWipedProgressString(numLevelsForFile));
+                
+                myOutWriter.close();
+                fos.close();
+            } 
+
+        } catch (IOException ex) {
+        	String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
+			Log.e("sdcard-err2:",err); 
+        }
+    }
+	
+	public void readFile(String fileName){
+		File sdcard = Environment.getExternalStorageDirectory();
+
+		//Get the text file
+		File file = new File(sdcard.getAbsolutePath() + "/type-king/" + fileName);
+
+		//Read text from file
+
+		try {
+		    BufferedReader br = new BufferedReader(new FileReader(file));
+		    String line;
+
+		    while ((line = br.readLine()) != null) {
+		        String[] parts = line.split(" ");
+		        completeArray.add(parts[1]);
+		        hsArray.add(Integer.parseInt(parts[2].trim()));
+		    }
+		    br.close();
+		}
+		catch (IOException ex) {
+			String err = (ex.getMessage()==null)?"SD Card failed":ex.getMessage();
+			Log.e("sdcard-err2:",err); 
+		}
+	}
+	
+	public String getWipedProgressString(int linesForFile){
+		String ans = "";
+		
+		for(int i = 1; i <= linesForFile; i++){
+			ans += i + " " + "i 0\n";
+		}
+		
+		return ans;
+	}
+	
 	class MyAdapter<String> extends ArrayAdapter<String>{
 		
-		public MyAdapter(Context context, int resource, String[] values){
-			super(context, resource, values);
+		String[] myValues;
+		
+		public MyAdapter(Context context, int resource, int tvResource, String[] values){
+			super(context, resource, tvResource, values);
+			
+			myValues = values.clone();
 		}
 		
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {  
-			View view = super.getView(position, convertView, parent);  
-			if (position < (numLines/3)) {
-				view.setBackgroundColor(Color.parseColor("#F5AB35"));  
-			} else if(position < ((2*numLines)/3)) {
-				view.setBackgroundColor(Color.parseColor("#E67E22"));  
-			} else{
-				view.setBackgroundColor(Color.parseColor("#C0392B"));
+			View view = super.getView(position, convertView, parent);
+			
+			boolean completion = false;
+			
+			TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+			TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+			
+			text1.setText(myValues[position].toString());
+			
+			if(position >= completeArray.size()){ //ACCOUNTS FOR THE "RANDOM LEVEL" TAB
+				text2.setText("Generates a random level");
+			}else if(completeArray.get(position).equals("i") && hsArray.get(position) == 0){
+				text2.setText("Level Incomplete"); //NEED TO GRAB USER DATA TO SEE IF LEVEL IS COMPLETE.  IF IT IS, FOLLOW FORMAT BELOW
+			}else if(completeArray.get(position).equals("c") && hsArray.get(position) != 0){
+				completion = true;
+				text2.setText("Level Complete - High Score: " + hsArray.get(position));
 			}
-
+			
+			/*
+			 * "Level Complete - High Score: 1250"
+			 */
+			
+			if(!completion){
+				if (position < 10) {
+					view.setBackgroundColor(Color.parseColor("#F5AB35"));  
+				} else if(position < 20) {
+					view.setBackgroundColor(Color.parseColor("#E67E22"));  
+				} else if(position < 30){
+					view.setBackgroundColor(Color.parseColor("#C0392B"));
+				} else {
+					view.setBackgroundColor(Color.parseColor("#663399"));
+				}
+			}else
+				view.setBackgroundColor(Color.parseColor("#1E824C"));
 			return view;  
 		}
 		
