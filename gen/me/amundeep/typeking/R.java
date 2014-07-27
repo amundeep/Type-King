@@ -26,16 +26,17 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int about_icon=0x7f020001;
         public static final int button_custom1=0x7f020002;
         public static final int button_custom2=0x7f020003;
-        public static final int button_unclickable=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int instructions=0x7f020006;
-        public static final int instructions_icon=0x7f020007;
-        public static final int options=0x7f020008;
-        public static final int options_icon=0x7f020009;
-        public static final int options_icon2=0x7f02000a;
-        public static final int start=0x7f02000b;
-        public static final int start_icon=0x7f02000c;
-        public static final int title=0x7f02000d;
+        public static final int button_custom3=0x7f020004;
+        public static final int button_unclickable=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int instructions=0x7f020007;
+        public static final int instructions_icon=0x7f020008;
+        public static final int options=0x7f020009;
+        public static final int options_icon=0x7f02000a;
+        public static final int options_icon2=0x7f02000b;
+        public static final int start=0x7f02000c;
+        public static final int start_icon=0x7f02000d;
+        public static final int title=0x7f02000e;
     }
     public static final class id {
         public static final int bBackToMenu=0x7f070006;

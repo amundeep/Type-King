@@ -5,14 +5,14 @@
     <item android:state_pressed="true" >
         <shape>
             <gradient
-                android:startColor="#483D8B"
-                android:endColor="#663399"
+                android:startColor="#047255"
+                android:endColor="#047255"
                 android:angle="270" />
             <stroke
-                android:width="3dp"
+                android:width="0dp"
                 android:color="#483D8B" />
             <corners
-                android:radius="3dp" />
+                android:radius="0dp" />
             <padding
                 android:left="10dp"
                 android:top="10dp"
@@ -24,14 +24,14 @@
     <item android:state_focused="true" >
         <shape>
             <gradient
-                android:endColor="#000080"
-                android:startColor="#191970"
+                android:endColor="#009875"
+                android:startColor="#009875"
                 android:angle="270" />
             <stroke
-                android:width="3dp"
+                android:width="0dp"
                 android:color="#483D8B" />
             <corners
-                android:radius="3dp" />
+                android:radius="0dp" />
             <padding
                 android:left="10dp"
                 android:top="10dp"
@@ -43,14 +43,14 @@
     <item>        
         <shape>
             <gradient
-                android:endColor="#663399"
-                android:startColor="#674172"
+                android:endColor="#009875"
+                android:startColor="#009875"
                 android:angle="270" />
             <stroke
-                android:width="3dp"
+                android:width="0dp"
                 android:color="#483D8B" />
             <corners
-                android:radius="3dp" />
+                android:radius="0dp" />
             <padding
                 android:left="10dp"
                 android:top="10dp"
