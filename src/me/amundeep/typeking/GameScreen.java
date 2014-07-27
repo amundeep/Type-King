@@ -65,9 +65,10 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 	//Button state
 	int toggleStop = 0;
 	String[] toggleText = {"BEGIN", "PAUSE/QUIT", "RESTART/QUIT", "NEW LEVEL/QUIT"};
+	boolean toggle = false;
 	
 	//UI Elements
-	Button bStop;
+	Button bStop, bGameMode, bNewLevel, bSaveHighscore, bBackToMenu;
 	EditText etDisplay, etInput, etTime, etStatusBar;
 	
 	@Override
@@ -174,6 +175,12 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		etInput.setFocusable(false);
 		etInput.setFocusableInTouchMode(false);
 		imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		
+		bGameMode = (Button) findViewById(R.id.bGameMode);
+		bGameMode.setOnClickListener(this);
+		bBackToMenu = (Button) findViewById(R.id.bBackToMenu);
+		bBackToMenu.setOnClickListener(this);
+		
 	}
 	
 	
@@ -216,84 +223,121 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		case R.id.bStop:
 			if(toggleStop == 0){  //IF GAME HAS NOT STARTED
 				toggleStop = 1; //IN LEVEL STATE
-				bStop.setText(toggleText[toggleStop]);
+				bStop.setText("Pause");
 				launchLevel(); //Start Level
 				startTimer();; //Start timer
 			}else if(toggleStop == 1){                    //IF GAME IS IN PROGRESS
-				pauseTimer();
-				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-				alertDialog.setTitle("Level Paused");
-		        alertDialog.setMessage("The level is paused.  Resume or quit to Main Menu");
-		        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Quit to Menu",new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			        	   toggleStop = 0;
-			        	   bStop.setText(toggleText[toggleStop]);
-			        	   stopTimer();
-			        	   Intent menu = new Intent("me.amundeep.typeking.MAINMENU");
-			        	   startActivity(menu);
-			           }
-			    });
-		        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Resume Level",new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			        	   resumeTimer();
-			        	   etInput.requestFocus();
-			           }
-			    });
-		        alertDialog.setCancelable(false);
-		        alertDialog.setCanceledOnTouchOutside(false);
-		        alertDialog.show();
+				
+//				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+//				alertDialog.setTitle("Level Paused");
+//		        alertDialog.setMessage("The level is paused.  Resume or quit to Main Menu");
+//		        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Quit to Menu",new DialogInterface.OnClickListener() {
+//			           public void onClick(DialogInterface dialog, int which) {
+//			        	   toggleStop = 0;
+//			        	   bStop.setText(toggleText[toggleStop]);
+//			        	   stopTimer();
+//			        	   Intent menu = new Intent("me.amundeep.typeking.MAINMENU");
+//			        	   startActivity(menu);
+//			           }
+//			    });
+//		        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Resume Level",new DialogInterface.OnClickListener() {
+//			           public void onClick(DialogInterface dialog, int which) {
+//			        	   resumeTimer();
+//			        	   etInput.requestFocus();
+//			           }
+//			    });
+//		        alertDialog.setCancelable(false);
+//		        alertDialog.setCanceledOnTouchOutside(false);
+//		        alertDialog.show();
+				
+				if(!toggle){
+					pauseTimer();
+					etInput.setFocusable(false);
+					etInput.setFocusableInTouchMode(false);
+					imm.hideSoftInputFromWindow(etInput.getWindowToken(), 0);
+					bStop.setText("Resume");
+					displayMessage("Level is paused.  Click 'Resume' to continue.", 0);
+					toggle = true;
+				}else{
+					etInput.setFocusable(true);
+					etInput.setFocusableInTouchMode(true);
+					etInput.requestFocus();
+					imm.showSoftInput(etInput, InputMethodManager.SHOW_IMPLICIT);
+					bStop.setText("Pause");
+					displayMessage("Level has resumed.  Keep going!", 0);
+					resumeTimer();
+					toggle = false;
+				}
 		        
-			}else if(toggleStop == 2){                  //GAME OVER, RESTART/QUIT
-				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-				alertDialog.setTitle("Game Over");
-		        alertDialog.setMessage("Unfortunately, you couldn't complete the level.  Restart the current level or quit to Main Menu");
-		        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Quit to Menu",new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			        	   toggleStop = 0;
-			        	   bStop.setText(toggleText[toggleStop]);
-			        	   stopTimer();
-			        	   Intent menu = new Intent("me.amundeep.typeking.MAINMENU");
-			        	   startActivity(menu);
-			           }
-			    });
-		        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Restart Level",new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			        	   toggleStop = 1; //IN LEVEL STATE
-			        	   bStop.setText(toggleText[toggleStop]);
-			        	   etInput.requestFocus();
-			        	   launchLevel(); //Start Level
-			        	   startTimer();; //Start timer
-			           }
-			    });
-//		        alertDialog.setCancelable(false);
-//		        alertDialog.setCanceledOnTouchOutside(false);
-		        alertDialog.show();
-			}else{                                   //COMPLETE, NEW LEVEL/QUIT
-				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-				alertDialog.setTitle("Level Complete");
-		        alertDialog.setMessage("Choose a new level or quit to Main Menu.");
-		        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Quit to Menu",new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			        	   toggleStop = 0;
-			        	   bStop.setText(toggleText[toggleStop]);
-			        	   stopTimer();
-			        	   Intent menu = new Intent("me.amundeep.typeking.MAINMENU");
-			        	   startActivity(menu);
-			           }
-			    });
-		        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Choose Level",new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			        	   toggleStop = 0; //BEGINNING STATE
-			        	   bStop.setText(toggleText[toggleStop]);
-			        	   Intent levels = new Intent("me.amundeep.typeking.LEVELPACKS");
-			        	   startActivity(levels);
-			           }
-			    });
-//		        alertDialog.setCancelable(false);
-//		        alertDialog.setCanceledOnTouchOutside(false);
-		        alertDialog.show();
 			}
+//				else if(toggleStop == 2){                  //GAME OVER, RESTART/QUIT
+//				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+//				alertDialog.setTitle("Game Over");
+//		        alertDialog.setMessage("Unfortunately, you couldn't complete the level.  Restart the current level or quit to Main Menu");
+//		        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Quit to Menu",new DialogInterface.OnClickListener() {
+//			           public void onClick(DialogInterface dialog, int which) {
+//			        	   toggleStop = 0;
+//			        	   bStop.setText(toggleText[toggleStop]);
+//			        	   stopTimer();
+//			        	   Intent menu = new Intent("me.amundeep.typeking.MAINMENU");
+//			        	   startActivity(menu);
+//			           }
+//			    });
+//		        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Restart Level",new DialogInterface.OnClickListener() {
+//			           public void onClick(DialogInterface dialog, int which) {
+//			        	   toggleStop = 1; //IN LEVEL STATE
+//			        	   bStop.setText(toggleText[toggleStop]);
+//			        	   etInput.requestFocus();
+//			        	   launchLevel(); //Start Level
+//			        	   startTimer(); //Start timer
+//			           }
+//			    });
+////		        alertDialog.setCancelable(false);
+////		        alertDialog.setCanceledOnTouchOutside(false);
+//		        alertDialog.show();
+//			}else{                                   //COMPLETE, NEW LEVEL/QUIT
+//				AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+//				alertDialog.setTitle("Level Complete");
+//		        alertDialog.setMessage("Choose a new level or quit to Main Menu.");
+//		        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Quit to Menu",new DialogInterface.OnClickListener() {
+//			           public void onClick(DialogInterface dialog, int which) {
+//			        	   toggleStop = 0;
+//			        	   bStop.setText(toggleText[toggleStop]);
+//			        	   stopTimer();
+//			        	   Intent menu = new Intent("me.amundeep.typeking.MAINMENU");
+//			        	   startActivity(menu);
+//			           }
+//			    });
+//		        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Choose Level",new DialogInterface.OnClickListener() {
+//			           public void onClick(DialogInterface dialog, int which) {
+//			        	   toggleStop = 0; //BEGINNING STATE
+//			        	   bStop.setText(toggleText[toggleStop]);
+//			        	   Intent levels = new Intent("me.amundeep.typeking.LEVELPACKS");
+//			        	   startActivity(levels);
+//			           }
+//			    });
+////		        alertDialog.setCancelable(false);
+////		        alertDialog.setCanceledOnTouchOutside(false);
+//		        alertDialog.show();
+//			}
 			break;
+		case R.id.bBackToMenu:
+			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+			alertDialog.setTitle("Quit to Main Menu");
+	        alertDialog.setMessage("Are you sure you want to quit this level and go to the Main Menu?");
+	        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int which) {
+		        	   
+		           }
+		    });
+	        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int which) {
+		        	   Intent menu = new Intent("me.amundeep.typeking.MAINMENU");
+		        	   startActivity(menu);
+		           }
+		    });
+	        
+	        alertDialog.show();
 		}
 	}
 	
@@ -452,11 +496,12 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		
 		etInput.setText("");
 		etDisplay.setText("");
-		displayMessage("Game Over!  Restart, quit to Main Menu, or go back to choose a new level.  You had " + points + " points.", 2);
+		displayMessage("Game Over!  Retry the level, you can get it!  Or go back to choose a new level.  You had " + points + " points.", 2);
 		
 		time = 30;
-		toggleStop = 2;
-		bStop.setText(toggleText[toggleStop]);
+		bStop.setText("Retry");
+		toggleStop = 0;
+//		bStop.setText(toggleText[toggleStop]);
 	}
 	
 	//LEVEL COMPLETE
@@ -473,8 +518,9 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		imm.hideSoftInputFromWindow(etInput.getWindowToken(), 0);
 		
 		levelComplete = true;
-		toggleStop = 3;
-		bStop.setText(toggleText[toggleStop]);
+		toggleStop = 0;
+		bStop.setText("Retry");
+//		bStop.setText(toggleText[toggleStop]);
 		wordCount = 0;
 		
 	}

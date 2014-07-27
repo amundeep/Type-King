@@ -23,27 +23,38 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
     }
     public static final class drawable {
         public static final int about=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int instructions=0x7f020002;
-        public static final int options=0x7f020003;
-        public static final int start=0x7f020004;
-        public static final int title=0x7f020005;
+        public static final int about_icon=0x7f020001;
+        public static final int button_custom1=0x7f020002;
+        public static final int button_custom2=0x7f020003;
+        public static final int button_unclickable=0x7f020004;
+        public static final int ic_launcher=0x7f020005;
+        public static final int instructions=0x7f020006;
+        public static final int instructions_icon=0x7f020007;
+        public static final int options=0x7f020008;
+        public static final int options_icon=0x7f020009;
+        public static final int options_icon2=0x7f02000a;
+        public static final int start=0x7f02000b;
+        public static final int start_icon=0x7f02000c;
+        public static final int title=0x7f02000d;
     }
     public static final class id {
+        public static final int bBackToMenu=0x7f070006;
+        public static final int bGameMode=0x7f070007;
         public static final int bStop=0x7f070001;
         public static final int etDisplay=0x7f070003;
         public static final int etInput=0x7f070004;
         public static final int etStatusBar=0x7f070000;
         public static final int etTime=0x7f070002;
-        public static final int ivAbout=0x7f07000c;
-        public static final int ivInstructions=0x7f07000b;
-        public static final int ivOptions=0x7f07000d;
-        public static final int ivStart=0x7f07000a;
-        public static final int ivTitle=0x7f070008;
-        public static final int lvLevelPacks=0x7f070006;
-        public static final int rlMainMenu=0x7f070007;
-        public static final int rlOne=0x7f070009;
-        public static final int tvChooseLevel=0x7f070005;
+        public static final int ivAbout=0x7f07000f;
+        public static final int ivInstructions=0x7f07000e;
+        public static final int ivOptions=0x7f070010;
+        public static final int ivStart=0x7f07000d;
+        public static final int ivTitle=0x7f07000b;
+        public static final int llButtons=0x7f070005;
+        public static final int lvLevelPacks=0x7f070009;
+        public static final int rlMainMenu=0x7f07000a;
+        public static final int rlOne=0x7f07000c;
+        public static final int tvChooseLevel=0x7f070008;
     }
     public static final class layout {
         public static final int activity_gamescreen=0x7f030000;

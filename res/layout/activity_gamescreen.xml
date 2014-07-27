@@ -28,13 +28,16 @@
         
         <Button
             android:id="@+id/bStop"
+            android:background="@drawable/button_custom2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_margin="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
             android:minWidth="100dp"
-            android:text="BEGIN" />
+            android:minHeight="30dp"
+            android:text="Begin" />
 
 
         <EditText
@@ -44,6 +47,7 @@
             android:layout_toRightOf="@id/bStop"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:background="@null"
             android:textIsSelectable="false"
             android:focusable="false"
@@ -79,6 +83,85 @@
         android:inputType="textVisiblePassword"
         android:focusable="true"
         android:ems="10" />
+    
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical"
+    	android:layout_gravity="center_horizontal" >
+        
+        <TableRow
+            android:id="@+id/llButtons"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_centerHorizontal="true" 
+            android:layout_alignParentBottom="true" >
+            
+            <Button
+                android:id="@+id/bBackToMenu"
+                android:background="@drawable/button_custom1"
+                android:textColor="#FFFFFF"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_margin="6dp"
+                android:minWidth="100dp"
+                android:minHeight="70dp"
+                android:text="Main Menu" />
+            
+            <Button
+                android:id="@+id/bGameMode"
+                android:background="@drawable/button_custom1"
+                android:textColor="#FFFFFF"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_margin="6dp"
+                android:minWidth="100dp"
+                android:minHeight="70dp"
+                android:text="Game Modes" />
+            
+            
+            
+        </TableRow>
+        
+		<!-- <TableRow
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_centerHorizontal="true" 
+            android:layout_above="@id/llButtons" >
+            
+            <Button
+                android:id="@+id/bNewLevel"
+                android:background="@drawable/button_custom1"
+                android:textColor="#FFFFFF"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:minWidth="100dp"
+                android:minHeight="70dp"
+                android:text="New Level" />
+            
+            <Button
+                android:id="@+id/bSaveHighscore"
+                android:background="@drawable/button_unclickable"
+                android:clickable="false"
+                android:textColor="#FFFFFF"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:minWidth="100dp"
+                android:minHeight="70dp"
+                android:text="Save Highscore" />
+            
+        </TableRow> -->
+    
+    </RelativeLayout>
 
     
 </LinearLayout>
