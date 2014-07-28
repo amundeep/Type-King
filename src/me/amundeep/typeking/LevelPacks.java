@@ -124,7 +124,7 @@ public class LevelPacks extends Activity{
                 int itemPosition = position;
                 
                 // ListView Clicked item value
-                String  itemValue = (String) lvLevelPacks.getItemAtPosition(position);
+                String itemValue = (String) lvLevelPacks.getItemAtPosition(position);
                    
                 // Show Alert 
 //                Toast.makeText(getApplicationContext(),

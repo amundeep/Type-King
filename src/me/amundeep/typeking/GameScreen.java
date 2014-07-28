@@ -456,6 +456,7 @@ public class GameScreen extends Activity implements OnClickListener, OnEditorAct
 		etInput.requestFocus();
 		imm.showSoftInput(etInput, InputMethodManager.SHOW_IMPLICIT);
 		
+		levelComplete = false;
 		wordCount = 0;
 		points = 0;
 		
