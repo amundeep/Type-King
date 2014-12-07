@@ -40,7 +40,7 @@ public class MainMenu extends Activity{
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Log.i("Button", "working!");
-				Intent openLevelPacks = new Intent("me.amundeep.typeking.LEVELPACKS");
+				Intent openLevelPacks = new Intent("me.amundeep.typeking.GAMEMODES");
 				startActivity(openLevelPacks);
 			}
 			
