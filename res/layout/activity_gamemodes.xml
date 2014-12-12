@@ -86,13 +86,13 @@
 	        android:layout_gravity="center_horizontal"
 	        android:minWidth="300dp"
 		   	android:minHeight="70dp"
-	        android:text="Hardcore Mode" />
+	        android:text="Barebones Mode" />
 	    
 	    <TextView
 	        android:id="@+id/tvHardcoreInfo"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="The Hardcore game mode does not allow keyboard advantages and requires users to type each word letter by letter."
+	        android:text="The Barebones game mode does not allow keyboard advantages and requires users to type each word letter by letter."
 	        android:textColor="#FFFFFF"
 	        android:padding="10dp"
 	        android:layout_margin="10dp"
